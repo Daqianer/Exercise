@@ -1,23 +1,16 @@
-import React, { Component } from "react";
-class Heart extends Component {
-  state = {};
-  getLikeClassName = () => {
-    const className = "fa fa-heart";
-    if (this.props.movie.like) {
-      return className;
-    } else {
-      return className + "-o";
-    }
-  };
-  render() {
-    return (
-      <i
-        className={this.getLikeClassName()}
-        aria-hidden="true"
-        onClick={this.props.onLike}
-      ></i>
-    );
-  }
-}
+import React from "react";
+
+const Heart = (props) => {
+  let classes = "fa fa-heart";
+  if (!props.movie.like) classes += "-o";
+  return (
+    <i
+      className={classes}
+      style={{ cursor: "pointer" }}
+      aria-hidden="true"
+      onClick={props.onLike}
+    ></i>
+  );
+};
 
 export default Heart;
