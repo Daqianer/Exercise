@@ -26,6 +26,7 @@ class Movies extends Component {
   };
 
   render() {
+    const { length: count } = this.state.movies;
     return (
       <div style={{ width: "auto" }}>
         <h1>Showing {this.state.movies.length} movies in the database</h1>
@@ -69,7 +70,7 @@ class Movies extends Component {
             </tbody>
           </table>
         )}
-        <Pagination />
+        <Pagination itemsCount={count} pageSize={2} />
       </div>
     );
   }
