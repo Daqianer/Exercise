@@ -35,10 +35,12 @@ class Movies extends Component {
   render() {
     const { movies: allMovies, pageSize, currentPage } = this.state;
     const { length: count } = allMovies;
+
+    if (count === 0) return <p>There are no movies in the database</p>;
     const movies = paginate(allMovies, currentPage, pageSize);
     return (
       <div style={{ width: "auto" }}>
-        <h1>Showing {movies.length} movies in the database</h1>
+        <h1>Showing {count} movies in the database</h1>
         {movies.length !== 0 && (
           <table className="table">
             <thead>
