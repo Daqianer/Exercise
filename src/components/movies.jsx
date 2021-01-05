@@ -6,6 +6,8 @@ import Pagination from "./pagination";
 class Movies extends Component {
   state = {
     movies: getMovies(),
+    pageSize: 2,
+    currentPage: 1,
   };
 
   handleDeleteMovies = (movieId) => {
@@ -24,13 +26,18 @@ class Movies extends Component {
     movies[index].like = !movies[index].like;
     this.setState({ movies });
   };
+  handlePageChange = (page) => {
+    console.log(page);
+    this.setState({ currentPage: page });
+  };
 
   render() {
-    const { length: count } = this.state.movies;
+    const { movies, pageSize, currentPage } = this.state;
+    const { length: count } = movies;
     return (
       <div style={{ width: "auto" }}>
-        <h1>Showing {this.state.movies.length} movies in the database</h1>
-        {this.state.movies.length !== 0 && (
+        <h1>Showing {movies.length} movies in the database</h1>
+        {movies.length !== 0 && (
           <table className="table">
             <thead>
               <tr>
@@ -43,7 +50,7 @@ class Movies extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.movies.map((item) => {
+              {movies.map((item) => {
                 return (
                   <tr key={item._id}>
                     <td>{item.title}</td>
@@ -70,7 +77,12 @@ class Movies extends Component {
             </tbody>
           </table>
         )}
-        <Pagination itemsCount={count} pageSize={2} />
+        <Pagination
+          itemsCount={count}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onChangePage={this.handlePageChange}
+        />
       </div>
     );
   }
