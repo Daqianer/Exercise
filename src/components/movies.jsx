@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import Heart from "./heart";
 import Pagination from "./pagination";
+import { paginate } from "../utils/paginate";
 
 class Movies extends Component {
   state = {
@@ -32,8 +33,9 @@ class Movies extends Component {
   };
 
   render() {
-    const { movies, pageSize, currentPage } = this.state;
-    const { length: count } = movies;
+    const { movies: allMovies, pageSize, currentPage } = this.state;
+    const { length: count } = allMovies;
+    const movies = paginate(allMovies, currentPage, pageSize);
     return (
       <div style={{ width: "auto" }}>
         <h1>Showing {movies.length} movies in the database</h1>
