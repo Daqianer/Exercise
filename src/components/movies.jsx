@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
-import { genres, getGenres } from "../services/fakeGenreService";
+import { getGenres } from "../services/fakeGenreService";
 import Heart from "./heart";
 import Pagination from "./pagination";
 import { paginate } from "../utils/paginate";
@@ -8,10 +8,16 @@ import List from "./list";
 
 class Movies extends Component {
   state = {
-    movies: getMovies(),
+    movies: [],
+    genres: [],
     pageSize: 5,
     currentPage: 1,
   };
+
+  componentDidMount() {
+    const genres = [{ name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres });
+  }
 
   handleDeleteMovies = (movieId) => {
     // console.log(movieId);
@@ -33,24 +39,41 @@ class Movies extends Component {
     console.log(page);
     this.setState({ currentPage: page });
   };
-  handleGenresChange = (genreId) => {
-    console.log(genreId);
-    getGenres(genreId);
+  handleGenreSelect = (item) => {
+    console.log(item);
+    this.setState({ selectedGenre: item, currentPage: 1 });
   };
 
   render() {
-    const { movies: allMovies, pageSize, currentPage } = this.state;
-    const { length: count } = allMovies;
+    const {
+      movies: allMovies,
+      pageSize,
+      currentPage,
+      selectedGenre,
+    } = this.state;
+
+    const filteredMovies =
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
+        : allMovies;
+
+    const { length: count } = filteredMovies;
 
     if (count === 0) return <p>There are no movies in the database</p>;
-    const movies = paginate(allMovies, currentPage, pageSize);
+
+    const movies = paginate(filteredMovies, currentPage, pageSize);
+
     return (
       <div className="container">
         <div className="row">
-          <div className="col-4">
-            <List genres={genres} onChangeGenres={this.handleGenresChange} />
+          <div className="col-3">
+            <List
+              genres={this.state.genres}
+              onGenreSelect={this.handleGenreSelect}
+              selectedGenre={this.state.selectedGenre}
+            />
           </div>
-          <div className="col-8">
+          <div className="col">
             <h1>Showing {count} movies in the database</h1>
             {movies.length !== 0 && (
               <table className="table">
