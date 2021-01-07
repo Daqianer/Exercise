@@ -8,7 +8,7 @@ const Heart = (props) => {
       className={classes}
       style={{ cursor: "pointer" }}
       aria-hidden="true"
-      onClick={props.onLike}
+      onClick={() => props.onLike(props.movie)}
     ></i>
   );
 };

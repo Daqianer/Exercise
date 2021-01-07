@@ -3,10 +3,12 @@ import _ from "lodash";
 import PropTypes from "prop-types"; //React类型检查库
 
 const Pagination = (props) => {
-  // console.log(props);
   const { itemsCount, pageSize, currentPage, onChangePage } = props;
+
   const pagesCount = Math.ceil(itemsCount / pageSize);
+
   if (pagesCount === 1) return null;
+
   const pages = _.range(1, pagesCount + 1);
 
   return (
