@@ -3,6 +3,27 @@ import Heart from "./heart";
 import TableHeader from "./comment/tableHeader";
 import TableBody from "./comment/tableBody";
 class moviesTable extends Component {
+  columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    {
+      key: "like",
+      content: (item) => <Heart movie={item} onLike={this.props.onLike} />,
+    },
+    {
+      key: "delete",
+      content: (item) => (
+        <button
+          onClick={() => this.props.onDelete(item._id)}
+          className="btn btn-danger"
+        >
+          Delete
+        </button>
+      ),
+    },
+  ];
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log(prevProps, this.props);
     // console.log(prevState, this.state);
@@ -13,23 +34,16 @@ class moviesTable extends Component {
   }
 
   render() {
-    const { movies, onLike, onDelete, onSort, sortColumn } = this.props;
-    const columns = [
-      { path: "title", label: "Title" },
-      { path: "genre.name", label: "Genre" },
-      { path: "numberInStock", label: "Stock" },
-      { path: "dailyRentalRate", label: "Rate" },
-      { key: "like" },
-      { key: "delete" },
-    ];
+    const { movies, onSort, sortColumn } = this.props;
+
     return (
       <table className="table">
         <TableHeader
-          columns={columns}
+          columns={this.columns}
           sortColumn={sortColumn}
           onSort={onSort}
         />
-        <TableBody data={movies} />
+        <TableBody data={movies} columns={this.columns} />
       </table>
     );
   }

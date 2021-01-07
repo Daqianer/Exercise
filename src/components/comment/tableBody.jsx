@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import Heart from "../heart";
+import _ from "lodash";
 
 class TableBody extends Component {
+  renderCell = (item, column) => {
+    if (column.content) return column.content(item);
+    return _.get(item, column.path);
+  };
   render() {
     const { data: movies, columns } = this.props;
     return (
@@ -9,23 +13,8 @@ class TableBody extends Component {
         {movies.map((item) => (
           <tr key={item._id}>
             {columns.map((column) => (
-              <td></td>
+              <td>{this.renderCell(item, column)}</td>
             ))}
-            {/*<td>{item.title}</td>*/}
-            {/*<td>{item.genre.name}</td>*/}
-            {/*<td>{item.numberInStock}</td>*/}
-            {/*<td>{item.dailyRentalRate}</td>*/}
-            {/*<td>*/}
-            {/*  <Heart movie={item} onLike={onLike} />*/}
-            {/*</td>*/}
-            {/*<td>*/}
-            {/*  <button*/}
-            {/*    onClick={() => onDelete(item._id)}*/}
-            {/*    className="btn btn-danger"*/}
-            {/*  >*/}
-            {/*    Delete*/}
-            {/*  </button>*/}
-            {/*</td>*/}
           </tr>
         ))}
       </tbody>
