@@ -17,7 +17,7 @@ const List = (props) => {
               ? "list-group-item active"
               : "list-group-item"
           }
-          key={item[textProperty]}
+          key={item[valueProperty]}
           style={{ cursor: "pointer" }}
           onClick={() => onGenreSelect(item)}
         >

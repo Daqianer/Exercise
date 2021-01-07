@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
-
+import _ from "lodash";
 import Pagination from "./pagination";
 import List from "./list";
 import MoviesTable from "./moviesTable";
@@ -13,10 +13,11 @@ class Movies extends Component {
     genres: [],
     pageSize: 2,
     currentPage: 1,
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
-    const genres = [{ name: "All Genres" }, ...getGenres()];
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
   }
 
@@ -46,12 +47,17 @@ class Movies extends Component {
     this.setState({ selectedGenre: item, currentPage: 1 });
   };
 
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
+  };
+
   render() {
     const {
       movies: allMovies,
       pageSize,
       currentPage,
       selectedGenre,
+      sortColumn,
     } = this.state;
 
     const filteredMovies =
@@ -63,7 +69,12 @@ class Movies extends Component {
 
     if (count === 0) return <p>There are no movies in the database</p>;
 
-    const movies = paginate(filteredMovies, currentPage, pageSize);
+    const orderedMovies = _.orderBy(
+      filteredMovies,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
+    const movies = paginate(orderedMovies, currentPage, pageSize);
 
     return (
       <div className="container">
@@ -79,10 +90,12 @@ class Movies extends Component {
             <h1>Showing {count} movies in the database</h1>
             <MoviesTable
               movies={movies}
+              sortColumn={sortColumn}
               onLike={this.handleLikeMovies}
               onDelete={this.handleDeleteMovies}
               currentPage={currentPage}
               onChangePage={this.handlePageChange}
+              onSort={this.handleSort}
             />
             <Pagination
               itemsCount={count}
