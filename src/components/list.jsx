@@ -1,13 +1,12 @@
 import React from "react";
 
-const List = (props) => {
-  const {
-    genres,
-    onGenreSelect,
-    textProperty,
-    valueProperty,
-    selectedGenre,
-  } = props;
+const List = ({
+  genres,
+  onGenreSelect,
+  textProperty,
+  valueProperty,
+  selectedGenre,
+}) => {
   return (
     <ul className="list-group">
       {genres.map((item) => (
