@@ -13,7 +13,7 @@ class Movies extends Component {
     genres: [],
     pageSize: 2,
     currentPage: 1,
-    sortColumn: { path: "title", order: "asc" },
+    sortColumn: { path: "title", order: "asc" }, //按照那一列进行如何排序
   };
 
   componentDidMount() {
@@ -51,7 +51,7 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
+  getPagedMovies = () => {
     const {
       movies: allMovies,
       pageSize,
@@ -59,15 +59,10 @@ class Movies extends Component {
       selectedGenre,
       sortColumn,
     } = this.state;
-
     const filteredMovies =
       selectedGenre && selectedGenre._id
         ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
         : allMovies;
-
-    const { length: count } = filteredMovies;
-
-    if (count === 0) return <p>There are no movies in the database</p>;
 
     const orderedMovies = _.orderBy(
       filteredMovies,
@@ -75,6 +70,17 @@ class Movies extends Component {
       [sortColumn.order]
     );
     const movies = paginate(orderedMovies, currentPage, pageSize);
+
+    return { count: filteredMovies.length, movies };
+  };
+
+  render() {
+    const { movies: allMovies, pageSize, currentPage, sortColumn } = this.state;
+
+    if (allMovies.length === 0)
+      return <p>There are no movies in the database</p>;
+
+    const { count, movies } = this.getPagedMovies();
 
     return (
       <div className="container">
